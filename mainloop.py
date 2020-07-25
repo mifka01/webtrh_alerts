@@ -2,7 +2,9 @@ import engine
 import alert
 
 old_titles, old_links = engine.get_deals()
-
+print('Webtrh Alerts active')
+print('Running..')
+print('--------------------')
 
 while True:
     new_deals = []
