@@ -1,0 +1,5 @@
+argparse
+lxml
+beautifulsoup4
+requests
+csv
