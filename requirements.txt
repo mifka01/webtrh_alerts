@@ -2,3 +2,4 @@ argparse
 lxml
 beautifulsoup4
 requests
+json
