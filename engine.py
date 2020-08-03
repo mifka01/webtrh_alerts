@@ -51,10 +51,11 @@ def get_deal_details(link):
     numbers = soup.find('div', {'class': 'row padding-20-0'})
     numbers = numbers.find_all('div',{'class':'col-xs-6'})[1].text
     numbers = " ".join(numbers.split())
-
+    seller = soup.find('div',{'class':'people'}).find('div',{'class':'dropdown-text'}).text
+    seller = " ".join(seller.split())
     
 
-    return article, budget, numbers
+    return article, budget, numbers, seller
 
 
 def get_new_deals():

@@ -1,3 +1,5 @@
 env/
 __pycache__/
 deals.csv
+access_token.py
+conf.py
