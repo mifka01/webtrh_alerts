@@ -21,7 +21,7 @@ def get_emails_to_send():
 
     json_data.keys()
     last_pushes = [push for push in json_data['pushes'][:10] if push['active']]
-    send_messages = [push for push in last_pushes if push['body'][-6:] == "..mail"]
+    send_messages = [push for push in last_pushes if "body" in push.keys() and push['body'][-6:] == "..mail"]
 
 
     emails_to_send = []
