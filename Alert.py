@@ -70,7 +70,7 @@ class Alert(Email):
         return " ".join(bloated_string.strip().split())
 
     def send_notification(self, data):
-        data = {"type": "note", "title": 'TEST TEST TEST TEST',
+        data = {"type": "note", "title": 'Nová pracovní nabídka',
                 "body": f"{data['title']}\n{data['seller']}\n\n{data['article']}\n\n{data['link']}\n{self.get_code()}"}
         resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data),
                              headers={'Authorization': 'Bearer ' + ACCESS_TOKEN, 'Content-Type': 'application/json'})
