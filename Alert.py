@@ -35,9 +35,9 @@ class Alert(Email):
             soup.find('blockquote', class_='postcontent').text)
         budget = self.clean(soup.find(
             'span', class_='vbpas_cena_poptavky1').text)
-        numbers = soup.find('div', {'class': 'row padding-20-0'})
+        numbers = soup.find('table', {'class': 'vbpas_deal_info'})
         numbers = self.clean(numbers.find_all(
-            'div', class_='col-xs-6')[1].text)
+            'tr')[2].text)
         seller = self.clean(soup.find('a', {'class': 'username'}).text)
         return {"article": article, "budget": budget, "numbers": numbers, "seller": seller}
 
