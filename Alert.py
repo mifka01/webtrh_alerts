@@ -32,14 +32,13 @@ class Alert(Email):
         source = requests.get(link)
         soup = BeautifulSoup(source.content, 'lxml')
         article = self.clean(
-            soup.find('div', class_='padding-30 article').text)
-        budget = self.clean(soup.find_all(
-            'div', class_='col-xs-6 padding-10-0')[2].text)
+            soup.find('blockquote', class_='postcontent').text)
+        budget = self.clean(soup.find(
+            'span', class_='vbpas_cena_poptavky1').text)
         numbers = soup.find('div', {'class': 'row padding-20-0'})
         numbers = self.clean(numbers.find_all(
             'div', class_='col-xs-6')[1].text)
-        seller = self.clean(soup.find('div', {'class': 'people'}).find(
-            'div', class_='dropdown-text').text)
+        seller = self.clean(soup.find('a', {'class': 'username'}).text)
         return {"article": article, "budget": budget, "numbers": numbers, "seller": seller}
 
     def run(self):
@@ -84,4 +83,5 @@ class Alert(Email):
         return ''.join(random.choice(letters) for i in range(4))
 
     def delete_notification(self, iden):
-        requests.delete(url=f"https://api.pushbullet.com/v2/pushes/{iden}", headers={'Access-Token': ACCESS_TOKEN})
+        requests.delete(
+            url=f"https://api.pushbullet.com/v2/pushes/{iden}", headers={'Access-Token': ACCESS_TOKEN})
