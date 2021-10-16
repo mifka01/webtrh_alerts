@@ -19,7 +19,7 @@ class Alert(Email):
         soup = BeautifulSoup(source.content, 'lxml')
         deals_scraped = [deal.find("div", class_="deal-column title")
                          for deal in soup.find_all("div", class_="deal-row")]
-        for deal in deals_scraped[1:]:
+        for deal in deals_scraped[1:-1]:
             link = self.clean(deal.find("a")["href"])
             title = self.clean(deal.text)
             deals.append({"title": title,
