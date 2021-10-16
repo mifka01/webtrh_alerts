@@ -1,7 +1,5 @@
 import requests
-import os
 import json
-import csv
 from bs4 import BeautifulSoup
 import time
 from settings import ACCESS_TOKEN, MESSAGE
@@ -32,7 +30,7 @@ class Alert(Email):
         source = requests.get(link)
         soup = BeautifulSoup(source.content, 'lxml')
         article = self.clean(
-            soup.find('blockquote', class_='postcontent').text)
+            soup.find('div', class_='padding-25 article').text)
         budget = self.clean(soup.find(
             'span', class_='vbpas_cena_poptavky1').text)
         numbers = soup.find('table', {'class': 'vbpas_deal_info'})
