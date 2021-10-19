@@ -33,8 +33,10 @@ class Alert(Email):
             soup.find('div', class_='padding-25 article').text)
         budget = self.clean(soup.find_all(
             'div', class_='col-xs-6 padding-10-0')[2].text)
+        seller = self.clean(soup.find('div', {'class': 'people'}).find(
+            'div', class_='dropdown-text').text)
         numbers = self.clean(soup.find('div', {'class': 'info-box'}).text)
-        return {"article": article, "budget": budget, "numbers": numbers}
+        return {"article": article, "budget": budget, "seller":seller, "numbers": numbers}
 
     def run(self):
         old_deals = self.get_deals()
@@ -65,7 +67,7 @@ class Alert(Email):
 
     def send_notification(self, data):
         data = {"type": "note", "title": 'Nová pracovní nabídka',
-                "body": f"{data['title']}\n\n{data['article']}\n\n{data['link']}\n{self.get_code()}"}
+                "body": f"{data['title']}\n{data['seller']}\n\n{data['article']}\n\n{data['link']}\n{self.get_code()}"}
         resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data),
                              headers={'Authorization': 'Bearer ' + ACCESS_TOKEN, 'Content-Type': 'application/json'})
         if resp.status_code != 200:
