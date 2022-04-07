@@ -1,4 +1,13 @@
-import settings
+from config import (
+        SEND_EMAIL_PREFIX,
+        LOGIN_DATA,
+        PUSHBULLET_PUSH_URL,
+        PUSHBULLET_HEADERS,
+        EMAIL_DATA,
+        SEND_MAIL_REQUEST_URL,
+        LOGIN_REQUEST_URL,
+        NEW_MAIL_URL
+        )
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -7,49 +16,52 @@ from bs4 import BeautifulSoup
 class Email:
 
     def __init__(self):
-        self.login_data = {
-            'vb_login_username': settings.USERNAME,
-            'vb_login_password': settings.PASSWORD,
-            's': None,
-            'securitytoken': 'guest',
-            'do': 'login',
-            'vb_login_md5password': None,
-            'vb_login_md5password_utf': None
-            }
+        self.login_data = LOGIN_DATA
 
     def get_mails_to_send(self):
-        response = requests.get('https://api.pushbullet.com/v2/pushes',
-                            headers={'Authorization': 'Bearer ' + settings.ACCESS_TOKEN, 'Content-Type': 'application/json'})
-        pushes = [push for push in json.loads(response.text)["pushes"][:10] if "body" in push.keys() and push["active"]]
-        codes = {push["body"][-4:]: push["iden"] for push in pushes if "/mail" in push["body"][-10:]}
-        mails = [{"recipient": push["body"].splitlines()[1],
-                  "title":push["body"].splitlines()[0],
-                  "iden":push["iden"],
-                  "command_iden": codes[push["body"][-4:]]} for push in pushes if push["body"][-4:] in codes.keys() and len(push["body"]) > 10]
+        response = requests.get(
+                PUSHBULLET_PUSH_URL,
+                headers=PUSHBULLET_HEADERS
+                )
+
+        pushes = []
+        for push in json.loads(response.text)['pushes'][:-10]:
+            if push.get('active') and push.get('body') is not None:
+                pushes.append(push)
+
+        mails = []
+        codes = self.get_send_codes(pushes)
+        for push in pushes:
+            body = push.get('body')
+            code = body[-4:]
+            if code in codes and len(body) > 10:
+                mails.append({
+                    'recipient': body.splitlines()[2],
+                    'title': push.get('title'),
+                    'iden': push.get('title'),
+                    'command_iden': codes.get(code)
+                    })
         return mails
 
-    def send_mail(self, recipient, title, message):
-        email_data = {
-        "recipients": recipient,
-        'bccrecipients': None,
-        'title': f'Re: {title}',
-        'message': message,
-        'sbutton': 'Odeslat příspěvek',
-        's': None,
-        'securitytoken': None,
-        'receipt': 0,
-        'savecopy': 1,
-        'signature': 0,
-        'parseurl': 1,
-        'disablesmilies': 1,
-        'do': 'insertpm',
-        'pmid': None,
-        'forward': None,
-    }
+    def get_send_codes(self, pushes):
+        codes = {}
+        for push in pushes:
+            body = push.get('body')
+            if SEND_EMAIL_PREFIX in body[-10:]:
+                code = body[-4:]
+                codes[code] = push['iden']
+        return codes
+
+    def send_mail(self, recipient, title):
+        email_data = EMAIL_DATA
+        email_data['recipients'] = recipient
+        email_data['title'] = f'Re: {title}'
+
         with requests.Session() as session:
-            session.post("https://webtrh.cz/login.php?do=login", data=self.login_data)
-            source = session.get('https://webtrh.cz/private.php?do=newpm')
+            session.post(LOGIN_REQUEST_URL, data=LOGIN_DATA)
+            source = session.get(NEW_MAIL_URL)
             soup = BeautifulSoup(source.content, 'lxml')
-            email_data["securitytoken"] = soup.find("input", {"name": "securitytoken"})["value"]
-            resp = session.post('https://webtrh.cz/private.php?do=insertpm&pmid=', data=email_data)
+            token = soup.select_one('input[name="securitytoken"]').get('value')
+            email_data["securitytoken"] = token
+            session.post(SEND_MAIL_REQUEST_URL, data=email_data)
         session.close()
