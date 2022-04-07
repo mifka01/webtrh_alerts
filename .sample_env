@@ -1,0 +1,11 @@
+# PUSHBULLET
+PUSHBULLET_API_KEY = ""
+PUSHBULLET_PUSH_URL = ""
+
+# WEBTRH
+WEBTRH_USERNAME = ""
+WEBTRH_PASSWORD = ""
+
+# If you set EMAIL_MESSAGE here it will have precedence over message.txt file
+# EMAIL_MESSAGE = ""
+
