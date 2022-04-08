@@ -41,7 +41,7 @@ python3 app.py
 ```shell
   /mail <4-digit-code>
 ```
-You can find the 4 digit code and the end of every notification.
+You can find the 4 digit code at the end of every notification.
 
 ## Configuration
 For configuration you can use [config.py](https://github.com/mifka01/webtrh_alerts/blob/master/config.py) file
