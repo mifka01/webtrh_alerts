@@ -19,13 +19,13 @@ class Alert(Email):
         super().__init__()
 
     def get_deals(self):
-        deals = []
+        deals = set()
         for category in WEBTRH_CATEGORIES:
             source = requests.get(category)
             soup = BeautifulSoup(source.content, 'lxml')
 
             for deal in soup('div', class_='deal-column title', limit=36)[1:]:
-                deals.append(deal.find('a')['href'])
+                deals.add(deal.find('a')['href'])
 
         return deals
 
@@ -54,14 +54,15 @@ class Alert(Email):
     def run(self):
         old_deals = self.get_deals()
         while True:
-            new_deals = [x for x in self.get_deals() if x not in old_deals]
+            scraped_deals = self.get_deals()
+            old_deals = old_deals.intersection(scraped_deals)
+            new_deals = scraped_deals.difference(old_deals)
             if (len(new_deals)):
                 for deal in new_deals:
                     data = self.get_deal_details(deal)
                     data["link"] = deal
                     self.send_notification(data)
-                    old_deals.insert(0, deal)
-                    old_deals.pop()
+                    old_deals.add(deal)
             mails = self.get_mails_to_send()
             if len(mails):
                 for mail in mails:
