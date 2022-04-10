@@ -24,7 +24,7 @@ class Alert(Email):
             source = requests.get(category)
             soup = BeautifulSoup(source.content, 'lxml')
 
-            for deal in soup('div', class_='deal-column title', limit=4)[1:]:
+            for deal in soup('div', class_='deal-column title', limit=36)[1:]:
                 deals.append(deal.find('a')['href'])
 
         return deals
@@ -53,10 +53,8 @@ class Alert(Email):
 
     def run(self):
         old_deals = self.get_deals()
-        print(old_deals)
         while True:
             new_deals = [x for x in self.get_deals() if x not in old_deals]
-            print(new_deals)
             if (len(new_deals)):
                 for deal in new_deals:
                     data = self.get_deal_details(deal)
