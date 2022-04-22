@@ -57,7 +57,7 @@ class Alert(Email):
             scraped_deals = self.get_deals()
             old_deals = old_deals.intersection(scraped_deals)
             new_deals = scraped_deals.difference(old_deals)
-            if (len(new_deals)):
+            if (len(old_deals) and len(new_deals)):
                 for deal in new_deals:
                     data = self.get_deal_details(deal)
                     data["link"] = deal
