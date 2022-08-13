@@ -1,5 +1,5 @@
 argparse
-lxml
+lxml==4.9.*
 beautifulsoup4
 requests
 python-dotenv
