@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 def valid_environment() -> bool:
     load_dotenv()
 
-    required = ["PUSHBULLET_API_KEY",
-                "PUSHBULLET_PUSH_URL",
-                "WEBTRH_USERNAME",
-                "WEBTRH_PASSWORD",
-                ]
+    required = ["DISCORD_TOKEN",
+                "DISCORD_CHANNEL_ID",
+                "MYSQL_HOST",
+                "MYSQL_USER",
+                "MYSQL_DATABASE",
+                "MYSQL_PASSWORD"]
 
     for var in required:
         try:
