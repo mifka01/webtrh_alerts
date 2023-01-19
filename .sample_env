@@ -1,11 +1,9 @@
-# PUSHBULLET
-PUSHBULLET_API_KEY = ""
-PUSHBULLET_PUSH_URL = ""
+# DISCORD
+DISCORD_TOKEN = ""
+DISCORD_CHANNEL_ID = ""
 
-# WEBTRH
-WEBTRH_USERNAME = ""
-WEBTRH_PASSWORD = ""
-
-# If you set EMAIL_MESSAGE here it will have precedence over message.txt file
-# EMAIL_MESSAGE = ""
-
+# MYSQL
+MYSQL_HOST = ""
+MYSQL_USER = ""
+MYSQL_DATABASE = ""
+MYSQL_PASSWORD = ""
