@@ -1,23 +1,22 @@
 [tool.poetry]
 name = "webtrh"
 version = "0.1.0"
-description = ""
+description = "Discord bot getting new orders from webtrh.cz"
 authors = ["Radim Mifka <radimmifka@gmail.com>"]
+license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-requests = "^2.26.0"
-lxml = "^4.6.3"
-beautifulsoup4 = "argparse"
+python = "^3.10"
 argparse = "^1.4.0"
-python-dotenv = "^0.20.0"
+lxml = ">=4.9.0,<4.10.0"
+beautifulsoup4 = "^4.11.1"
+requests = "^2.28.2"
+python-dotenv = "^0.21.0"
+discord = "^2.1.0"
+mysql-connector-python = "^8.0.31"
 
-[tool.poetry.dev-dependencies]
-requests = "^2.26.0"
-beautifulsoup4 = "^4.10.0"
-lxml = "^4.6.3"
-argparse = "^1.4.0"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
