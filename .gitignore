@@ -1,7 +1,4 @@
-env/
 __pycache__/
-deals.csv
-access_token.py
-conf.py
+.mypy_cache/
 .env
 .DS_Store
