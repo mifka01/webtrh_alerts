@@ -25,4 +25,11 @@ MYSQL_PASSWORD = env['MYSQL_PASSWORD']
 WEBTRH_LINK = "https://webtrh.cz/"
 OLD_WEBTRH_STYLE_LINK = "https://webtrh.cz/index.php?styleid=5"
 THREAD_ID_PREFIX_LEN = 7
+
+
+# CSS Selectors
 DEAL_ROW_SELECTOR = "tr.threadbitX"
+TITLE_SELECTOR = "a.title"
+AUTHOR_SELECTOR = "a.username"
+POSTBODY_SELECTOR = "div.postbody"
+BUDGET_SELECTOR = "span#vbpas_cena_poptavky1"

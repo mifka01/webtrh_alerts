@@ -1,5 +1,12 @@
 from types import NoneType
-from config import THREAD_ID_PREFIX_LEN, WEBTRH_LINK
+from config import (
+    THREAD_ID_PREFIX_LEN,
+    WEBTRH_LINK,
+    TITLE_SELECTOR,
+    AUTHOR_SELECTOR,
+    BUDGET_SELECTOR,
+    POSTBODY_SELECTOR
+)
 from bs4 import BeautifulSoup as bs
 
 
@@ -29,7 +36,7 @@ class Deal(object):
     @property
     def title(self):
         if(self._title is None):
-            self._title = self.soap.select_one('a.title').text.strip()
+            self._title = self.soap.select_one(TITLE_SELECTOR).text.strip()
         return self._title
 
     @title.setter
@@ -50,7 +57,7 @@ class Deal(object):
     @property
     def author(self):
         if(self._author is None):
-            self._author = self.detail_soup.select_one('a.username').text.strip()
+            self._author = self.detail_soup.select_one(AUTHOR_SELECTOR).text.strip()
         return self._author
 
     @author.setter
@@ -60,7 +67,7 @@ class Deal(object):
     @property
     def post_body(self):
         if(self._post_body is None):
-            self._post_body = self.detail_soup.select_one('div.postbody').text.strip()
+            self._post_body = self.detail_soup.select_one(POSTBODY_SELECTOR).text.strip()
         return self._post_body
 
     @post_body.setter
@@ -70,7 +77,7 @@ class Deal(object):
     @property
     def budget(self):
         if(self._budget is None):
-            self._budget = self.detail_soup.select_one('span#vbpas_cena_poptavky1').text.strip()
+            self._budget = self.detail_soup.select_one(BUDGET_SELECTOR).text.strip()
         return self._budget
 
     @budget.setter
