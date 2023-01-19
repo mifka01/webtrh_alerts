@@ -1,4 +1,3 @@
-from types import NoneType
 from config import (
     THREAD_ID_PREFIX_LEN,
     WEBTRH_LINK,
