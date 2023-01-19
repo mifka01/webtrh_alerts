@@ -1,66 +1,28 @@
-from pathlib import Path
 from os import environ as env
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# List of categories to alert from
-WEBTRH_CATEGORIES = ['https://webtrh.cz/f101']
+# Discord token
+DISCORD_TOKEN = env['DISCORD_TOKEN']
 
-# Edit EMAIL MESSAGE in <message.txt> file
-EMAIL_MESSAGE = Path('message.txt').read_text()
-if 'EMAIL_MESSAGE' in env and env['EMAIL_MESSAGE'] != "":
-    EMAIL_MESSAGE = env['EMAIL_MESSAGE']
+# Discord channel
+DISCORD_CHANNEL_ID = int(env['DISCORD_CHANNEL_ID'])
 
-# Send email command prefix
-SEND_EMAIL_PREFIX = '/mail'
+# https://gist.github.com/thomasbnt/b6f455e2c7d743b796917fa3c205f812
+MESSAGE_COLOR = 7419530
 
-# Webtrh login request url
-LOGIN_REQUEST_URL = 'https://webtrh.cz/login.php?do=login'
+# Scraping task loop in seconds
+TASK_LOOP = 60
 
-# Webtrh new mail url
-NEW_MAIL_URL = 'https://webtrh.cz/private.php?do=newpm'
+# MYSQL database credentials
+MYSQL_HOST = env['MYSQL_HOST']
+MYSQL_USER = env['MYSQL_USER']
+MYSQL_DATABASE = env['MYSQL_DATABASE']
+MYSQL_PASSWORD = env['MYSQL_PASSWORD']
 
-# Webtrh send mail request url
-SEND_MAIL_REQUEST_URL = 'https://webtrh.cz/private.php?'
-
-# Pushbullet api key
-PUSHBULLET_API_KEY = env['PUSHBULLET_API_KEY']
-
-# Pushbullet push url
-PUSHBULLET_PUSH_URL = env['PUSHBULLET_PUSH_URL']
-
-# Pushbullet headers
-PUSHBULLET_HEADERS = {
-                    'Authorization': f"Bearer {PUSHBULLET_API_KEY}",
-                    'Content-Type': 'application/json'
-                    }
-# Webtrh login request data
-LOGIN_DATA = {
-            'vb_login_username': env['WEBTRH_USERNAME'],
-            'vb_login_password': env['WEBTRH_PASSWORD'],
-            's': None,
-            'securitytoken': 'guest',
-            'do': 'login',
-            'vb_login_md5password': None,
-            'vb_login_md5password_utf': None
-            }
-
-# Email request data
-EMAIL_DATA = {
-                "recipients": '',
-                'bccrecipients': None,
-                'title': '',
-                'message': EMAIL_MESSAGE,
-                'sbutton': 'Odeslat příspěvek',
-                's': None,
-                'securitytoken': None,
-                'receipt': 0,
-                'savecopy': 1,
-                'signature': 0,
-                'parseurl': 1,
-                'disablesmilies': 1,
-                'do': 'insertpm',
-                'pmid': None,
-                'forward': None,
-            }
+# Webtrh
+WEBTRH_LINK = "https://webtrh.cz/"
+OLD_WEBTRH_STYLE_LINK = "https://webtrh.cz/index.php?styleid=5"
+THREAD_ID_PREFIX_LEN = 7
+DEAL_ROW_SELECTOR = "tr.threadbitX"
