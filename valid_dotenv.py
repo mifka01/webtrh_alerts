@@ -6,7 +6,6 @@ def valid_environment() -> bool:
     load_dotenv()
 
     required = ["DISCORD_TOKEN",
-                "DISCORD_CHANNEL_ID",
                 "MYSQL_HOST",
                 "MYSQL_USER",
                 "MYSQL_DATABASE",
