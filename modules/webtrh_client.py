@@ -48,8 +48,8 @@ class WBClient():
         remove = self.saved_deals_ids.difference(self.current_deals_ids)
         remove_len = len(remove)
         if(remove_len > 0):
-            sql = "DELETE FROM products WHERE id IN (%s)" % ",".join(["%s"] * remove_len)
-            self.database.query(sql, remove, commit=True)
+            sql = "DELETE FROM deal WHERE id IN (%s)" % ",".join(["%s"] * remove_len)
+            self.database.query(sql, list(remove), commit=True)
             self.current_deals_ids = set()
             print(f"[info] removed {remove_len} old deals")
 
