@@ -1,38 +1,52 @@
 from config import MYSQL_DATABASE, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER
 import mysql.connector
+from sys import exit
 
 
 class DBClient(object):
-    connection = None
-    cursor = None
 
     def __init__(self):
-        if DBClient.connection is None:
-            try:
-                DBClient.connection = mysql.connector.connect(
+        self.pool = self.create_pool()
+
+    def create_pool(self, pool_name="cleardb_pool", pool_size=3):
+        pool = mysql.connector.pooling.MySQLConnectionPool(
+                      pool_name=pool_name,
+                      pool_size=pool_size,
+                      pool_reset_session=True,
                       host=MYSQL_HOST,
                       user=MYSQL_USER,
                       database=MYSQL_DATABASE,
                       password=MYSQL_PASSWORD
                     )
-                DBClient.cursor = DBClient.connection.cursor(buffered=True, dictionary=True)
-            except Exception as error:
-                print(f"error: Connection not established {error}")
-            else:
-                print("Connection established")
 
-        self.connection = DBClient.connection
-        self.cursor = DBClient.cursor
+        return pool
 
-    def query(self, sql, values=None, many=False, fetchall=False):
+    def close(self, conn, cursor):
+        cursor.close()
+        conn.close()
+
+    def query(self, sql, values=None, many=False, fetchall=False, fetchone=False, commit=False):
+        conn = self.pool.get_connection()
+        cursor = conn.cursor(buffered=True, dictionary=True)
+
         if(many):
-            self.cursor.executemany(sql, values)
+            cursor.executemany(sql, values)
         else:
-            self.cursor.execute(sql, values)
+            cursor.execute(sql, values)
+
+        if(commit):
+            conn.commit()
+            self.close(conn, cursor)
+            return None
 
         if(fetchall):
-            return self.cursor.fetchall()
-        return self.cursor
+            res = cursor.fetchall()
+            self.close(conn, cursor)
+            return res
 
-    def commit(self):
-        self.connection.commit()
+        if(fetchone):
+            res = cursor.fetchone()
+            self.close(conn, cursor)
+            return res
+
+        
