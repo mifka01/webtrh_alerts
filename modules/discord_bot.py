@@ -38,12 +38,13 @@ class DCBot(commands.Bot):
     @tasks.loop(seconds=TASK_LOOP)
     async def send_new_jobs(self):
         print(f'[loop] {datetime.now():%d.%m.%Y %H:%M:%S}')
+        new_deals = self.webtrh.get_deals()
         async for guild in self.fetch_guilds(limit=150):
             channel = await self.get_channel(guild.id)
             if(channel is None):
                 continue
 
-            for deal in self.webtrh.get_deals():
+            for deal in new_deals:
                 message = Message(deal)
                 await channel.send(embed=message)
                 print(f"[info] deal {deal.id} has been sent to {guild.name}")
