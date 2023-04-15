@@ -1,4 +1,5 @@
 from os import environ as env
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,6 +23,14 @@ MYSQL_PASSWORD = env['MYSQL_PASSWORD']
 WEBTRH_LINK = "https://webtrh.cz/"
 OLD_WEBTRH_STYLE_LINK = "https://webtrh.cz/index.php?styleid=5"
 THREAD_ID_PREFIX_LEN = 7
+AVAILABLE_CATEGORIES = {
+    "f101": "Poptávky vývoje a programování",
+    "f93": "Poptávky designu, fotografování a videa",
+    "f102": "Poptávky obchodu a marketingu",
+    "f106": "Poptávky jazykových služeb",
+    "f53": "Velkoobchodní poptávky",
+    "f11": "Další poptávky",
+}
 
 # CSS Selectors
 DEAL_ROW_SELECTOR = "tr.threadbitX"

@@ -1,10 +1,12 @@
 from os import wait
+from sys import exit
+
 import requests
 from bs4 import BeautifulSoup as bs
+
+from config import DEAL_ROW_SELECTOR, OLD_WEBTRH_STYLE_LINK, WEBTRH_LINK
 from modules.database import DBClient
-from config import WEBTRH_LINK, OLD_WEBTRH_STYLE_LINK, DEAL_ROW_SELECTOR
 from modules.deal import Deal
-from sys import exit
 
 
 class WBClient():
@@ -28,6 +30,11 @@ class WBClient():
         sql = 'SELECT id, code FROM category'
         self.categories = self.database.query(sql, fetchall=True)
 
+    def get_guild_categories(self, guild_id):
+        sql = 'SELECT category_id FROM guild_categories WHERE guild_id = %s'
+        cats = self.database.query(sql, [guild_id], fetchall=True)
+        return [cat['category_id'] for cat in cats]
+
     def read_saved_deals(self, category):
         sql = "SELECT deal.id FROM deal where category = %s"
 
@@ -41,14 +48,15 @@ class WBClient():
 
         self.database.query(sql, values, many=True, commit=True)
         new_deals_len = len(new_deals)
-        if(new_deals_len):
+        if (new_deals_len):
             print(f"[info] inserted: {new_deals_len} new rows")
 
     def remove_old_deals(self):
         remove = self.saved_deals_ids.difference(self.current_deals_ids)
         remove_len = len(remove)
-        if(remove_len > 0):
-            sql = "DELETE FROM deal WHERE id IN (%s)" % ",".join(["%s"] * remove_len)
+        if (remove_len > 0):
+            sql = "DELETE FROM deal WHERE id IN (%s)" % ",".join([
+                "%s"] * remove_len)
             self.database.query(sql, list(remove), commit=True)
             self.current_deals_ids = set()
             print(f"[info] removed {remove_len} old deals")
@@ -61,7 +69,8 @@ class WBClient():
             try:
                 source = self.session.get(WEBTRH_LINK + category['code'])
             except Exception:
-                print(f'[error] {WEBTRH_LINK + category["code"]} is not accessible')
+                print(
+                    f'[error] {WEBTRH_LINK + category["code"]} is not accessible')
                 continue
 
             soup = bs(source.content, 'lxml')
@@ -75,7 +84,7 @@ class WBClient():
 
                 self.current_deals_ids.add(deal.id)
 
-                if(deal.id not in self.saved_deals_ids):
+                if (deal.id not in self.saved_deals_ids):
                     new_deals.add(deal)
 
         self.write_deals(new_deals)

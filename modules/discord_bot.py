@@ -1,9 +1,11 @@
-from discord.ext import tasks, commands
-from discord import Object
-from modules.webtrh_client import WBClient
-from modules.message import Message
-from config import TASK_LOOP, GUILD_JOIN_MESSAGE
 from datetime import datetime
+
+from discord import Object
+from discord.ext import commands, tasks
+
+from config import GUILD_JOIN_MESSAGE, TASK_LOOP
+from modules.message import Message
+from modules.webtrh_client import WBClient
 
 
 class DCBot(commands.Bot):
@@ -14,8 +16,9 @@ class DCBot(commands.Bot):
     async def get_channel(self, guild_id):
         guild = self.get_guild(guild_id)
         sql = "SELECT channel_id from guild where id = %s"
-        channel_id = self.webtrh.database.query(sql, [guild.id], fetchone=True)['channel_id']
-        if(channel_id is None):
+        channel_id = self.webtrh.database.query(
+            sql, [guild.id], fetchone=True)['channel_id']
+        if (channel_id is None):
             try:
                 await guild.owner.send(GUILD_JOIN_MESSAGE)
             except Exception:
@@ -41,10 +44,12 @@ class DCBot(commands.Bot):
         new_deals = self.webtrh.get_deals()
         async for guild in self.fetch_guilds(limit=150):
             channel = await self.get_channel(guild.id)
-            if(channel is None):
+            guild_categories = self.webtrh.get_guild_categories(guild.id)
+            if (channel is None):
                 continue
-
             for deal in new_deals:
+                if deal.category['id'] not in guild_categories:
+                    continue
                 message = Message(deal)
                 await channel.send(embed=message)
                 print(f"[info] deal {deal.id} has been sent to {guild.name}")
