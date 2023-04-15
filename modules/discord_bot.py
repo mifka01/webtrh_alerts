@@ -29,14 +29,14 @@ class DCBot(commands.Bot):
 
     async def setup_hook(self) -> None:
         # start the task to run in the background
-        self.send_new_jobs.start()
+        self.send_new_deals.start()
 
     async def on_ready(self):
         print(f'[info] Logged in as {self.user} (ID: {self.user.id})')
         print('--------------------')
 
     @tasks.loop(seconds=TASK_LOOP)
-    async def send_new_jobs(self):
+    async def send_new_deals(self):
         print(f'[loop] {datetime.now():%d.%m.%Y %H:%M:%S}')
         new_deals = self.webtrh.get_deals()
         async for guild in self.fetch_guilds(limit=150):
@@ -64,6 +64,6 @@ class DCBot(commands.Bot):
                     await channel.send(GUILD_JOIN_MESSAGE)
                     break
 
-    @send_new_jobs.before_loop
+    @send_new_deals.before_loop
     async def before_my_task(self):
         await self.wait_until_ready()  # wait until the bot logs in
